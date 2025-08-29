@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ectro Software</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeInTop 1s ease-out 0.3s forwards;
+        }
+
+        .nav-button {
+            background: rgba(0, 245, 255, 0.1);
+            border: 2px solid rgba(0, 245, 255, 0.3);
+            padding: 10px 25px;
+            border-radius: 25px;
+            color: #00f5ff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 245, 255, 0.2);
+            border-color: #00f5ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 245, 255, 0.2);
+        }
+
+        .nav-button.active {
+            background: rgba(0, 245, 255, 0.3);
+            border-color: #00f5ff;
+        }
+
+        @keyframes fadeInTop {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.5; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00f5ff, #0099ff, #0066cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.3)); }
+            to { filter: drop-shadow(0 0 30px rgba(0, 245, 255, 0.6)); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        .support-text {
+            font-size: 0.9rem;
+            color: rgba(160, 160, 160, 0.4);
+            line-height: 1.5;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .support-text span {
+            display: inline-block;
+            animation: letterWave 3s ease-in-out infinite;
+            animation-fill-mode: both;
+        }
+
+        @keyframes letterWave {
+            0%, 100% { 
+                transform: translateY(0px);
+                opacity: 0.4;
+            }
+            50% { 
+                transform: translateY(-5px);
+                opacity: 0.7;
+            }
+        }
+
+        .footer-support {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            z-index: 5;
+            padding: 0 20px;
+            opacity: 0;
+            animation: fadeInBottom 2s ease-out 2s forwards;
+        }
+
+        @keyframes fadeInBottom {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .buy-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
+            background-size: 200% 200%;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: buttonPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 107, 107, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 107, 107, 0.6); }
+        }
+
+        .buy-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.5);
+            background-position: 100% 100%;
+        }
+
+        .buy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .buy-button:hover::before {
+            left: 100%;
+        }
+
+        .details-button {
+            background: transparent;
+            border: 2px solid #00f5ff;
+            padding: 12px 30px;
+            font-size: 1rem;
+            color: #00f5ff;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .details-button:hover {
+            background: #00f5ff;
+            color: #0f0f23;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 245, 255, 0.3);
+        }
+
+        .dropdown-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .dropdown-menu.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .help-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .help-menu.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .help-content {
+            flex: 1;
+        }
+
+        .help-content h3 {
+            color: #00f5ff;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .help-content p {
+            color: #a0a0a0;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .discord-button {
+            background: linear-gradient(45deg, #5865f2, #7289da);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .discord-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+
+        .link-loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            z-index: 2001;
+            transition: all 0.3s ease;
+            opacity: 0;
+            text-align: center;
+        }
+
+        .link-loading.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .link-loading-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00f5ff;
+            animation: linkGlow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes linkGlow {
+            from { 
+                text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+            }
+            to { 
+                text-shadow: 0 0 30px rgba(0, 245, 255, 0.8);
+            }
+        }
+
+        .updates-loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            z-index: 2001;
+            transition: all 0.3s ease;
+            opacity: 0;
+            text-align: center;
+        }
+
+        .updates-loading.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .updates-loading-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00f5ff;
+            animation: updatesGlow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes updatesGlow {
+            from { 
+                text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+            }
+            to { 
+                text-shadow: 0 0 30px rgba(0, 245, 255, 0.8);
+            }
+        }
+
+        .updates-success {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            animation: successGlow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes successGlow {
+            from { 
+                text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            }
+            to { 
+                text-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+            }
+        }
+
+        .updates-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .updates-menu.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .updates-title {
+            color: #00f5ff;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .updates-subtitle {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .patch-notes {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #00f5ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .patch-notes h4 {
+            color: #00f5ff;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            color: #a0a0a0;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .feature-list li::before {
+            content: '-';
+            color: #00f5ff;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .status-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .status-text {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 1.1rem;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .dropdown-content h3 {
+            color: #00f5ff;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .dropdown-content p {
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #ff8e8e;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00f5ff;
+            margin-bottom: 30px;
+            animation: loadingGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes loadingGlow {
+            from { 
+                text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+                transform: scale(1);
+            }
+            to { 
+                text-shadow: 0 0 40px rgba(0, 245, 255, 0.8);
+                transform: scale(1.05);
+            }
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0, 245, 255, 0.2);
+            border-left: 4px solid #00f5ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-dots {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #00f5ff;
+        }
+
+        .dot {
+            animation: loadingDots 1.4s ease-in-out infinite;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes loadingDots {
+            0%, 80%, 100% { opacity: 0.3; }
+            40% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .dropdown-menu {
+                width: 90%;
+                max-width: 400px;
+            }
+            
+            .buy-button {
+                padding: 15px 30px;
+                font-size: 1.1rem;
+            }
+            
+            .loading-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="navbar">
+        <button class="nav-button active" onclick="showHome()">HOME</button>
+        <button class="nav-button" onclick="showHelp()">DÚVIDAS</button>
+        <button class="nav-button" onclick="showUpdates()">ATUALIZAÇÕES</button>
+    </div>
+    
+    <div class="container">
+        <h1 class="logo">ECTRO SOFTWARE</h1>
+        <p class="subtitle">Soluções avançadas em software</p>
+        
+        <button class="buy-button" onclick="comprarProduto()">
+            COMPRAR PRODUTO
+        </button>
+        
+        <button class="details-button" onclick="toggleDetails()">
+            DETALHES
+        </button>
+    </div>
+    
+    <div class="help-menu" id="helpMenu">
+        <button class="close-button" onclick="closeAllMenus()">&times;</button>
+        <div class="help-content">
+            <h3>Precisa de ajuda?</h3>
+            <p>Entre no Discord para falar com a nossa equipe e acessar a comunidade</p>
+        </div>
+        <button class="discord-button" onclick="openDiscordLink()">
+            ENTRAR NO DISCORD
+        </button>
+    </div>
+
+    <div class="updates-menu" id="updatesMenu">
+        <button class="close-button" onclick="closeAllMenus()">&times;</button>
+        <div class="updates-title">PAINEL BASIC DA EQUIPE ECTRO SOFTWARE</div>
+        <div class="updates-subtitle">• Notas da atualização</div>
+        
+        <div class="patch-notes">
+            <ul class="feature-list">
+                <li>aimbot legit</li>
+                <li>aimbot head</li>
+                <li>aimbot body</li>
+                <li>Distancia do aimbot</li>
+                <li>Fov circle</li>
+                <li>precision</li>
+                <li>mouse fix</li>
+                <li>no recoil</li>
+                <li>vision hack</li>
+                <li>chams menu</li>
+                <li>streaming mode</li>
+                <li>hide task bar</li>
+                <li>destruct</li>
+                <li>select emulador</li>
+            </ul>
+        </div>
+        
+        <div class="status-footer">
+            <div class="status-text">✅ ATIVO E TODO DIA</div>
+        </div>
+    </div>
+
+    <div class="footer-support">
+        <p class="support-text">A equipe Ectro Software tem total suporte para qualquer produto que você comprar na loja</p>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeAllMenus()"></div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-text">CARREGANDO</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-dots">
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+        </div>
+    </div>
+    
+    <div class="link-loading" id="linkLoading">
+        <div class="link-loading-text">LIBERANDO LINK</div>
+    </div>
+    
+    <div class="updates-loading" id="updatesLoading">
+        <div class="updates-loading-text" id="updatesText">VERIFICANDO ATUALIZAÇÕES</div>
+    </div>
+    
+    <div class="dropdown-menu" id="dropdownMenu">
+        <button class="close-button" onclick="closeDetails()">&times;</button>
+        <div class="dropdown-content">
+            <h3>Painel para Free Fire</h3>
+            <p><span class="highlight">✓ 100% Anti-Ban</span></p>
+            <p><span class="highlight">✓ Anti-Blacklist</span></p>
+            <p>Exclusivo da <span class="highlight">Ectro Software</span></p>
+            <p>Clique em <span class="highlight">"Comprar Produto"</span> para receber o painel com total suporte!</p>
+        </div>
+    </div>
+
+    <script>
+        // Criar partículas animadas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Função para mostrar Home
+        function showHome() {
+            closeAllMenus();
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.nav-button')[0].classList.add('active');
+        }
+
+        // Função para mostrar menu de Dúvidas
+        function showHelp() {
+            closeAllMenus();
+            const helpMenu = document.getElementById('helpMenu');
+            const overlay = document.getElementById('overlay');
+            
+            helpMenu.classList.add('show');
+            overlay.classList.add('show');
+            
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.nav-button')[1].classList.add('active');
+        }
+
+        // Função para mostrar atualizações com animações
+        function showUpdates() {
+            closeAllMenus();
+            const updatesLoading = document.getElementById('updatesLoading');
+            const updatesMenu = document.getElementById('updatesMenu');
+            const updatesText = document.getElementById('updatesText');
+            const overlay = document.getElementById('overlay');
+            
+            // Primeira animação: Verificando atualizações
+            updatesLoading.classList.add('show');
+            overlay.classList.add('show');
+            
+            setTimeout(() => {
+                // Segunda animação: Atualizado com sucesso
+                updatesText.textContent = 'ATUALIZADO COM SUCESSO!';
+                updatesText.className = 'updates-success';
+                
+                setTimeout(() => {
+                    // Fechar loading e mostrar menu
+                    updatesLoading.classList.remove('show');
+                    updatesMenu.classList.add('show');
+                    
+                    // Resetar texto para próxima vez
+                    setTimeout(() => {
+                        updatesText.textContent = 'VERIFICANDO ATUALIZAÇÕES';
+                        updatesText.className = 'updates-loading-text';
+                    }, 500);
+                }, 1500);
+            }, 2000);
+            
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.nav-button')[2].classList.add('active');
+        }
+
+        // Função para abrir Discord com animação
+        function openDiscordLink() {
+            const linkLoading = document.getElementById('linkLoading');
+            const overlay = document.getElementById('overlay');
+            
+            // Fechar menu de ajuda
+            closeAllMenus();
+            
+            // Mostrar animação de "liberando link"
+            linkLoading.classList.add('show');
+            overlay.classList.add('show');
+            
+            // Aguardar 2 segundos e abrir Discord
+            setTimeout(() => {
+                window.open('https://discord.gg/zj9CZ3P2TS', '_blank');
+                linkLoading.classList.remove('show');
+                overlay.classList.remove('show');
+            }, 2000);
+        }
+
+        // Função para mostrar/esconder detalhes
+        function toggleDetails() {
+            const menu = document.getElementById('dropdownMenu');
+            const overlay = document.getElementById('overlay');
+            
+            menu.classList.add('show');
+            overlay.classList.add('show');
+        }
+
+        // Função para fechar todos os menus
+        function closeAllMenus() {
+            const menu = document.getElementById('dropdownMenu');
+            const helpMenu = document.getElementById('helpMenu');
+            const updatesMenu = document.getElementById('updatesMenu');
+            const linkLoading = document.getElementById('linkLoading');
+            const updatesLoading = document.getElementById('updatesLoading');
+            const overlay = document.getElementById('overlay');
+            
+            menu.classList.remove('show');
+            helpMenu.classList.remove('show');
+            updatesMenu.classList.remove('show');
+            linkLoading.classList.remove('show');
+            updatesLoading.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+
+        // Função do botão comprar com animação de loading
+        function comprarProduto() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            // Mostrar animação de carregamento
+            loadingOverlay.classList.add('show');
+            
+            // Aguardar 2.5 segundos e depois abrir o Discord
+            setTimeout(() => {
+                // Abrir o link do Discord
+                window.open('https://discord.gg/zj9CZ3P2TS', '_blank');
+                
+                // Esconder a animação de carregamento
+                loadingOverlay.classList.remove('show');
+            }, 2500);
+        }
+
+        // Fechar menu com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAllMenus();
+            }
+        });
+
+        // Função para animar letras individualmente
+        function animateLetters() {
+            const supportText = document.querySelector('.support-text');
+            const text = supportText.textContent;
+            supportText.innerHTML = '';
+            
+            [...text].forEach((char, index) => {
+                const span = document.createElement('span');
+                span.textContent = char === ' ' ? '\u00A0' : char;
+                span.style.animationDelay = `${index * 0.1}s`;
+                supportText.appendChild(span);
+            });
+        }
+
+        // Inicializar animações quando a página carregar
+        window.addEventListener('load', function() {
+            createParticles();
+            setTimeout(animateLetters, 2000);
+        });
+    </script>
+</body>
+</html>
